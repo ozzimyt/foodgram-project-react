@@ -1,4 +1,6 @@
+Переделать бейдж
 ![workflow](https://github.com/ozzimyt/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg)
+ 
 ## Foodgram - продуктовый помощник
 
 ### Стек технологий

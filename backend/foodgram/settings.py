@@ -15,7 +15,7 @@ SECRET_KEY = os.getenv(
 
 DEBUG = True
 # TODO DEBUG = os.getenv('DEBUG', False)
-DEBUG_SQLITE = os.getenv('DEBUG_SQLITE', False)
+DEBUG_SQLITE = os.getenv('DEBUG_SQLITE', True)
 
 ALLOWED_HOSTS = ['*']
 # TODO ALLOWED_HOSTS = str(os.getenv('ALLOWED_HOSTS')).split()
@@ -28,6 +28,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # apps
+    'api.apps.ApiConfig',
+    'recipes.apps.RecipesConfig',
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
