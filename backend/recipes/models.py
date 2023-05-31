@@ -113,20 +113,20 @@ class Recipe(models.Model):
         return self.name
 
 
-class IngredientInRecipes:
+class IngredientInRecipes(models.Model):
     """"Ингридиенты в рецептах."""
     ingredient = models.ForeignKey(
         Ingredient,
-        'Ингредиент',
+        verbose_name='Ингредиент',
         on_delete=models.CASCADE
     )
     recipe = models.ForeignKey(
         Recipe,
-        'Рецепт',
+        verbose_name='Рецепт',
         on_delete=models.CASCADE
     )
     amount = models.PositiveSmallIntegerField(
-        'Количество ингредиента',
+        'Количество ингредиентов',
         validators=[MinValueValidator(1)]
     )
 
@@ -142,16 +142,16 @@ class IngredientInRecipes:
                 f'{self.ingredient.measurement_unit}')
 
 
-class TagInRecipes:
+class TagInRecipes(models.Model):
     """Теги в рецептах."""
     tag = models.ForeignKey(
         Tag,
-        'Тег',
+        verbose_name='Тег',
         on_delete=models.CASCADE
     )
     recipe = models.ForeignKey(
         Recipe,
-        'Рецепт',
+        verbose_name='Рецепт',
         on_delete=models.CASCADE
     )
 
@@ -160,20 +160,20 @@ class TagInRecipes:
         verbose_name_plural = 'Теги в рецептах'
 
     def __str__(self):
-        return f'{self.recipe.name} - {self.tag}'
+        return f'{self.recipe} - {self.tag}'
 
 
 class FavoriteRecipes(models.Model):
     """Модель для добавления избранных рецептов в подписки"""
     user = models.ForeignKey(
         User,
-        'Подписчик',
+        verbose_name='Подписчик',
         on_delete=models.CASCADE,
         related_name='favorites'
     )
     recipe = models.ForeignKey(
         Recipe,
-        'Рецепт',
+        verbose_name='Рецепт',
         on_delete=models.CASCADE,
         related_name='favorites'
     )
@@ -196,13 +196,13 @@ class ShoppingCart(models.Model):
     """Модель корзины покупок."""
     user = models.ForeignKey(
         User,
-        'Пользователь',
+        verbose_name='Пользователь',
         on_delete=models.CASCADE,
         related_name='shopping_cart'
     )
     recipe = models.ForeignKey(
         Recipe,
-        'Рецепт',
+        verbose_name='Рецепт',
         on_delete=models.CASCADE,
         related_name='shopping_cart'
     )

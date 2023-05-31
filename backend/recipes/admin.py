@@ -5,7 +5,7 @@ from recipes.models import (FavoriteRecipes, Ingredient, Recipe, ShoppingCart,
 
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
-    """ Класс для администирования ингредиентов. """
+    """Класс для администирования ингредиентов."""
 
     list_display = ('id', 'name', 'measurement_unit',)
     list_filter = ('name',)
@@ -14,7 +14,7 @@ class IngredientAdmin(admin.ModelAdmin):
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    """ Класс для администрирования тегов. """
+    """Класс для администрирования тегов."""
 
     list_display = ('id', 'name', 'color', 'slug',)
     list_filter = ('name', 'slug',)
@@ -23,17 +23,17 @@ class TagAdmin(admin.ModelAdmin):
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    """ Класс для администрирования рецептов. """
+    """Класс для администрирования рецептов."""
 
-    list_display = ('id', 'name', 'author', 'text', 'cooking_time',
-                    'ingredients', 'tags', 'pub_date')
+    list_display = ('id', 'name', 'author', 'text',
+                    'cooking_time', 'pub_date',)
     list_filter = ('name', 'author',)
-    search_fields = ('name', 'author', 'cooking_time', 'ingredients', 'tags')
+    search_fields = ('name', 'author', 'cooking_time', 'ingredients', 'tags',)
 
 
 @admin.register(TagInRecipes)
 class RecipeTagsAdmin(admin.ModelAdmin):
-    """ Класс для администрирования тегов рецептов. """
+    """Класс для администрирования тегов рецептов."""
 
     list_display = ('id', 'tag', 'recipe',)
     list_filter = ('tag', 'recipe',)
@@ -41,7 +41,7 @@ class RecipeTagsAdmin(admin.ModelAdmin):
 
 @admin.register(FavoriteRecipes)
 class FavoriteRecipesAdmin(admin.ModelAdmin):
-    """ Класс для администрирования избранных рецептов. """
+    """Класс для администрирования избранных рецептов."""
 
     list_display = ('id', 'user', 'recipe',)
     list_filter = ('user', 'recipe',)
@@ -49,7 +49,7 @@ class FavoriteRecipesAdmin(admin.ModelAdmin):
 
 @admin.register(ShoppingCart)
 class UserShoppingCartAdmin(admin.ModelAdmin):
-    """ Класс для администрирования пользовательской корзины. """
+    """Класс для администрирования пользовательской корзины."""
 
     list_display = ('id', 'user', 'recipe',)
     list_filter = ('user', 'recipe',)
