@@ -52,11 +52,6 @@ class UserCreateSerializer(UserCreateSerializer):
 class FollowerSerializer(serializers.ModelSerializer):
     """Сериализатор для подписок."""
 
-    email = serializers.ReadOnlyField(source='author.email')
-    id = serializers.ReadOnlyField(source='author.id')
-    username = serializers.ReadOnlyField(source='author.username')
-    first_name = serializers.ReadOnlyField(source='author.first_name')
-    last_name = serializers.ReadOnlyField(source='author.last_name')
     recipes = serializers.SerializerMethodField(read_only=True)
     recipes_count = serializers.SerializerMethodField(read_only=True)
     is_subscribed = serializers.SerializerMethodField(read_only=True)
@@ -113,7 +108,7 @@ class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tag
-        fields = ('id', 'name', 'color', 'slug')
+        fields = ('id', 'name', 'color', 'slug',)
 
 
 class IngredientSerializer(serializers.ModelSerializer):
