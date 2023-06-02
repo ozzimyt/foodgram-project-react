@@ -1,4 +1,5 @@
-![workflow](https://github.com/ozzimyt/foodgram-project-react/actions/workflows/foodgram_workflow.yml)
+
+![workflow](https://github.com/ozzimyt/foodgram-project-react/actions/workflows/badge.svg)
  
 ## Foodgram - продуктовый помощник
 
