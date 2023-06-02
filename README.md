@@ -1,5 +1,4 @@
-Переделать бейдж
-![workflow](https://github.com/ozzimyt/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg)
+![workflow](https://github.com/ozzimyt/foodgram-project-react/actions/workflows/foodgram_workflow.yml)
  
 ## Foodgram - продуктовый помощник
 
