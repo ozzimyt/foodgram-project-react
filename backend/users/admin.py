@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.models import Group
 
 from .models import Follow, User
 
@@ -24,3 +25,6 @@ class FollowAdmin(admin.ModelAdmin):
     list_display = ('user', 'author')
     list_filter = ('user', 'author')
     search_fields = ('user', 'author')
+
+
+admin.site.unregister(Group)

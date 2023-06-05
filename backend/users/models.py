@@ -19,26 +19,26 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ('username', 'first_name', 'last_name',)
 
     username = CharField(
-        'Имя пользователя',
+        verbose_name='Имя пользователя',
         help_text='Введите имя пользователя',
         max_length=consts.USER_MAX_LENGTH,
         validators=[validate_username],
         unique=True
     )
     first_name = CharField(
-        'Имя',
+        verbose_name='Имя',
         help_text='Введите имя',
         max_length=consts.USER_MAX_LENGTH,
         blank=True
     )
     last_name = CharField(
-        'Фамилия',
+        verbose_name='Фамилия',
         help_text='Введите фамилию',
         max_length=consts.USER_MAX_LENGTH,
         blank=True
     )
     email = EmailField(
-        'Адрес электронной почты',
+        verbose_name='Адрес электронной почты',
         help_text='Введите адрес электронной почты',
         unique=True,
         max_length=consts.EMAIL_MAX_LENGTH,
@@ -46,12 +46,6 @@ class User(AbstractUser):
     )
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=('username', 'email'),
-                name='unique_username_email'
-            )
-        ]
         ordering = ('username',)
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
@@ -66,24 +60,24 @@ class Follow(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='follower',
         verbose_name='Подписчик',
+        related_name='follower',
     )
 
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='following',
         verbose_name='Автор',
+        related_name='following',
     )
 
     class Meta:
         verbose_name = 'Подписчик'
         verbose_name_plural = 'Подписчики'
-        ordering = ('user',)
+        ordering = ('-id',)
         constraints = [
             models.UniqueConstraint(
-                fields=['user', 'author'],
+                fields=('user', 'author'),
                 name='unique_follow'
             )
         ]
