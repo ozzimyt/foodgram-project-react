@@ -2,13 +2,13 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import EmailValidator
 from django.db import models
 from django.db.models import CharField, EmailField
+
 # Я вот тут не уверен, как лучше - импрортировать все константы или только
 # нужные, лучше выглдит, когда все, тогда сразу понятно, что это константа,
 # помимо верхнего регистра, но, по моему скромному опыту - лучше избегать
 # полного импорта, указывая только нужные импорты, оставлю на ревью,
 # сделаю как скажешь
-from foodgram import consts
-
+from backend.foodgram import consts
 from .validators import validate_username
 
 
