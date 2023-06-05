@@ -96,12 +96,16 @@ DEBUG_SQLITE=True   # Или False для выбора PostgreSQL
 ```
 далее в папке **infra** выполнить команды:
 ```
-docker-compose up --build
-docker-compose exec backend python manage.py makemigrations
-docker-compose exec backend python manage.py migrate
-docker-compose exec backend python manage.py collectstatic --no-input
-docker-compose exec backend python manage.py json_to_db.py
-docker-compose exec backend python manage.py createsuperuser
+docker compose up -d --build
+```
+
+После создания и запуска контйнеров зайти в контейнер с бэкэндом и выполнить команды:  
+```
+docker compose exec backend python manage.py makemigrations
+docker compose exec backend python manage.py migrate
+docker compose exec backend python manage.py collectstatic --no-input
+docker compose exec backend python manage.py json_to_db.py
+docker compose exec backend python manage.py createsuperuser
 ```
 
 </details>
@@ -115,6 +119,7 @@ docker-compose exec backend python manage.py createsuperuser
 ```curl -SL https://github.com/docker/compose/releases/download/v2.14.2/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose```
 
 </details>
+
 ## Документация к API   
 
 Для открытия документации локально, запустите сервер и перейдите по ссылке:
