@@ -3,7 +3,9 @@ import csv
 from django.core.management.base import BaseCommand
 from recipes.models import Ingredient, Tag
 
-#TODO Переделать в рабочий вариант.
+# TODO Переделать в рабочий вариант.
+
+
 class Command(BaseCommand):
     help = 'Импорт из CSV в БД'
 
