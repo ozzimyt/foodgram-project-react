@@ -8,7 +8,7 @@ from django.db.models import CharField, EmailField
 # помимо верхнего регистра, но, по моему скромному опыту - лучше избегать
 # полного импорта, указывая только нужные импорты, оставлю на ревью,
 # сделаю как скажешь
-from backend.foodgram import consts
+from foodgram import consts
 from .validators import validate_username
 
 

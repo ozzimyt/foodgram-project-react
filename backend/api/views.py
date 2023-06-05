@@ -8,10 +8,10 @@ from rest_framework.decorators import action
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
 
-from backend.recipes.models import (FavoriteRecipes, Ingredient,
-                                    IngredientInRecipes, Recipe,
-                                    ShoppingCart, Tag)
-from backend.users.models import Follow, User
+from recipes.models import (FavoriteRecipes, Ingredient,
+                            IngredientInRecipes, Recipe,
+                            ShoppingCart, Tag)
+from users.models import Follow, User
 from .filters import IngredientFilter, RecipeFilter
 from .pagination import CustomPagination
 from .permissions import AuthorOrAdminOrReadOnly

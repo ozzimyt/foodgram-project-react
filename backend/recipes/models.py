@@ -2,8 +2,8 @@ from django.core.validators import (MaxValueValidator, MinValueValidator,
                                     RegexValidator)
 from django.db import models
 
-from backend.foodgram.consts import RECIPES_MAX_LENGTH
-from backend.users.models import User
+from foodgram.consts import RECIPES_MAX_LENGTH
+from users.models import User
 
 
 class Ingredient(models.Model):
