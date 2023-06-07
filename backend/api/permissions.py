@@ -9,5 +9,4 @@ class AuthorOrAdminOrReadOnly(IsAuthenticatedOrReadOnly):
             request.method in SAFE_METHODS
             or request.user.is_authenticated
             and request.user == obj.author
-            or request.user.is_staff
         )

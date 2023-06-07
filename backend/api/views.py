@@ -2,16 +2,12 @@ from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from djoser.views import UserViewSet
+from djoser.views import UserViewSet as UsersViewSet
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
 
-from recipes.models import (FavoriteRecipes, Ingredient,
-                            IngredientInRecipes, Recipe,
-                            ShoppingCart, Tag)
-from users.models import Follow, User
 from .filters import IngredientFilter, RecipeFilter
 from .pagination import CustomPagination
 from .permissions import AuthorOrAdminOrReadOnly
@@ -19,9 +15,13 @@ from .serializers import (FavoriteRecipeSerializer, FollowerSerializer,
                           IngredientSerializer, RecipeReadSerializer,
                           RecipeWriteSerializer, ShoppingCartSerializer,
                           TagSerializer, UserSerializer)
+from recipes.models import (FavoriteRecipes, Ingredient,
+                            IngredientInRecipes, Recipe,
+                            ShoppingCart, Tag)
+from users.models import Follow, User
 
 
-class UserViewSet(UserViewSet):
+class UserViewSet(UsersViewSet):
     """Вьюсет для пользователей."""
 
     queryset = User.objects.all()
@@ -84,6 +84,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (AuthorOrAdminOrReadOnly, )
     serializer_class = IngredientSerializer
     filter_backends = (IngredientFilter, )
+    search_fields = ('^name', )
     pagination_class = None
 
 
