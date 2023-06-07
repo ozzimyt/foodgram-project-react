@@ -166,7 +166,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         many=True,
         queryset=Tag.objects.all()
     )
-    ingredients = IngredientInRecipeSerializer(many=True)
+    ingredients = CreateIngredientInRecipeSerializer(many=True)
     image = Base64ImageField(required=False, allow_null=True)
 
     class Meta:
@@ -187,9 +187,9 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         IngredientInRecipes.objects.bulk_create(
             [
                 IngredientInRecipes(
-                    ingredient=ingredient.pop('id'),
+                    ingredient=ingredient['id'],
                     recipe=recipe,
-                    amount=ingredient.pop('amount'),
+                    amount=ingredient['amount'],
                 )
                 for ingredient in ingredients
             ]
