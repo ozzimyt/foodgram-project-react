@@ -30,29 +30,27 @@ class UserViewSet(UsersViewSet):
 
     @action(
         detail=True,
-        methods=['post', 'delete'],
+        methods=['post'],
         permission_classes=[IsAuthenticated],
     )
     def subscribe(self, request, id):
         user = request.user
         author = get_object_or_404(User, pk=id)
+        serializer = FollowerSerializer(
+            author, data=request.data, context={'request': request}
+        )
+        serializer.is_valid(raise_exception=True)
+        Follow.objects.create(user=user, author=author)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        if request.method == 'POST':
-            serializer = FollowerSerializer(
-                author, data=request.data, context={'request': request}
-            )
-            serializer.is_valid(raise_exception=True)
-            Follow.objects.create(user=user, author=author)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        if request.method == 'DELETE':
-            if not Follow.objects.filter(user=user, author=author).exists():
-                return Response(
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            get_object_or_404(Follow, user=user, author=author).delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    @subscribe.mapping.delete
+    def unsubscribe(self, request, id):
+        get_object_or_404(
+            Follow,
+            user=request.user,
+            author=User(id=id)
+        ).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False,
             methods=['get'],
@@ -122,7 +120,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @action(
         detail=True,
-        methods=['post', 'delete'],
+        methods=['post'],
         permission_classes=[IsAuthenticated],
     )
     def favorite(self, request, pk):
@@ -130,15 +128,33 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return self.add_action(FavoriteRecipeSerializer, request, pk)
         return self.delete_action(FavoriteRecipes, request, pk)
 
+    @favorite.mapping.delete
+    def delete_favorite(self, request, pk):
+        get_object_or_404(
+            FavoriteRecipes,
+            user=request.user,
+            recipe=get_object_or_404(Recipe, id=pk)
+        ).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
     @action(
         detail=True,
-        methods=['post', 'delete'],
+        methods=['post'],
         permission_classes=[IsAuthenticated],
     )
     def shopping_cart(self, request, pk):
         if request.method == 'POST':
             return self.add_action(ShoppingCartSerializer, request, pk)
         return self.delete_action(ShoppingCart, request, pk)
+
+    @shopping_cart.mapping.delete
+    def delete_shopping_cart(self, request, pk):
+        get_object_or_404(
+            ShoppingCart,
+            user=request.user,
+            recipe=get_object_or_404(Recipe, id=pk)
+        ).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @staticmethod
     def get_shopping_cart(ingredients, user):
