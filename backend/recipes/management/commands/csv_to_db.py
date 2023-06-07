@@ -1,25 +1,58 @@
-import csv
+import os.path as path
+from csv import DictReader
 
+from django.conf import settings
 from django.core.management.base import BaseCommand
 from recipes.models import Ingredient, Tag
 
-# TODO Переделать в рабочий вариант.
+# TODO пока не придумал как брать из 2 фалов без 2 циклов :(
+
+FILE_DIR = path.join(settings.BASE_DIR, 'data')
 
 
 class Command(BaseCommand):
     help = 'Импорт из CSV в БД'
 
     def handle(self, *args, **options):
-        files_path = ['./data/ingredients.csv', './data/tags.csv']
-        for index, file_path in enumerate(files_path, start=1):
-            try:
-                with open(file_path, encoding='utf8') as file:
-                    rows = list(csv.reader(file))
-                    if index == 1:
-                        objs = [Ingredient(*row) for row in rows]
-                        Ingredient.objects.bulk_create(objs)
-                    else:
-                        objs = [Tag(*row) for row in rows]
-                        Tag.objects.bulk_create(objs)
-            except Exception as error:
-                print('ошибка при импорте', error)
+        self.stdout.write('попытка импорта ингридиентов.')
+        try:
+            with open(
+                path.join(FILE_DIR, 'ingredients.csv'),
+                'r',
+                encoding='utf-8'
+            ) as file:
+                for row in DictReader(file):
+                    name, measurement_unit = row
+                    Ingredient.objects.get_or_create(
+                        name=name,
+                        measurement_unit=measurement_unit
+                    )
+                self.stdout.write(
+                    f'Импрот ингридиентов из "{file.name}" завершен.')
+        except FileNotFoundError:
+            self.stdout.write(
+                f'фаил "{file.name}" с ингридиентами не найден !')
+        except Exception as e:
+            self.stdout.write(
+                f'ошибка при импорте из файла "{file.name}" :', e)
+
+        self.stdout.write('попытка импорта тегов.')
+        try:
+            with open(
+                path.join(FILE_DIR, 'tags.csv'),
+                'r',
+                encoding='utf-8'
+            ) as file:
+                for row in DictReader(file):
+                    name, color, slug = row
+                    Tag.objects.get_or_create(
+                        name=name,
+                        color=color,
+                        slug=slug
+                    )
+                self.stdout.write(f'Импрот из тегов "{file.name}" завершен.')
+        except FileNotFoundError:
+            self.stdout.write(f'фаил "{file.name}" с тегами не найден !')
+        except Exception as e:
+            self.stdout.write(
+                f'ошибка при импорте из файла "{file.name}" :', e)

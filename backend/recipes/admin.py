@@ -1,7 +1,8 @@
 from django.contrib import admin
 
-from recipes.models import (FavoriteRecipes, Ingredient, Recipe,
-                            ShoppingCart, Tag, TagInRecipes)
+from foodgram.consts import MIN_NUM
+from recipes.models import (FavoriteRecipes, Ingredient, IngredientInRecipes,
+                            Recipe, ShoppingCart, Tag, TagInRecipes)
 
 
 @admin.register(Ingredient)
@@ -22,14 +23,55 @@ class TagAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
+class TagInRecipesInline(admin.TabularInline):
+    model = TagInRecipes
+    min_num = MIN_NUM
+
+
+class IngredientInRecipeInline(admin.TabularInline):
+    model = IngredientInRecipes
+    min_num = MIN_NUM
+
+
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     """Класс для администрирования рецептов."""
 
-    list_display = ('id', 'name', 'author', 'text',
-                    'cooking_time', 'pub_date',)
-    list_filter = ('name', 'author',)
-    search_fields = ('name', 'author', 'cooking_time', 'ingredients', 'tags',)
+    list_display = (
+        'id',
+        'name',
+        'author',
+        'text',
+        'cooking_time',
+        'pub_date',
+        'get_favorite_count',
+        'get_ingredients',
+        'get_tags',
+    )
+    list_display_links = ('name', 'author', 'pub_date',)
+    list_filter = ('name', 'author', 'pub_date',)
+    search_fields = (
+        'name',
+        'author',
+        'cooking_time',
+        'ingredients',
+        'tags',
+    )
+    inlines = (IngredientInRecipeInline, TagInRecipesInline)
+
+    @admin.display(description='Количество избранных')
+    def get_favorite_count(self, obj):
+        return obj.favorites.count()
+
+    @admin.display(description='Ингредиенты')
+    def get_ingredients(self, obj):
+        return ', '.join(
+            [ingredients.name for ingredients in obj.ingredients.all()]
+        )
+
+    @admin.display(description='Теги')
+    def get_tags(self, obj):
+        return ', '.join([tags.name for tags in obj.tags.all()])
 
 
 @admin.register(TagInRecipes)

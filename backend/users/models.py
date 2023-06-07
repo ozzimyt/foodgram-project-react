@@ -1,14 +1,9 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import EmailValidator
 from django.db import models
-from django.db.models import CharField, EmailField
+from django.db.models import F, CharField, EmailField, Q
 
-# Я вот тут не уверен, как лучше - импрортировать все константы или только
-# нужные, лучше выглдит, когда все, тогда сразу понятно, что это константа,
-# помимо верхнего регистра, но, по моему скромному опыту - лучше избегать
-# полного импорта, указывая только нужные импорты, оставлю на ревью,
-# сделаю как скажешь
-from foodgram import consts
+from foodgram.consts import EMAIL_MAX_LENGTH, USER_MAX_LENGTH
 from .validators import validate_username
 
 
@@ -21,27 +16,27 @@ class User(AbstractUser):
     username = CharField(
         verbose_name='Имя пользователя',
         help_text='Введите имя пользователя',
-        max_length=consts.USER_MAX_LENGTH,
+        max_length=USER_MAX_LENGTH,
         validators=[validate_username],
         unique=True
     )
     first_name = CharField(
         verbose_name='Имя',
         help_text='Введите имя',
-        max_length=consts.USER_MAX_LENGTH,
+        max_length=USER_MAX_LENGTH,
         blank=True
     )
     last_name = CharField(
         verbose_name='Фамилия',
         help_text='Введите фамилию',
-        max_length=consts.USER_MAX_LENGTH,
+        max_length=USER_MAX_LENGTH,
         blank=True
     )
     email = EmailField(
         verbose_name='Адрес электронной почты',
         help_text='Введите адрес электронной почты',
         unique=True,
-        max_length=consts.EMAIL_MAX_LENGTH,
+        max_length=EMAIL_MAX_LENGTH,
         validators=[EmailValidator]
     )
 
@@ -72,13 +67,17 @@ class Follow(models.Model):
     )
 
     class Meta:
+        ordering = ('user', 'author',)
         verbose_name = 'Подписчик'
         verbose_name_plural = 'Подписчики'
-        ordering = ('-id',)
         constraints = [
             models.UniqueConstraint(
                 fields=('user', 'author'),
                 name='unique_follow'
+            ),
+            models.CheckConstraint(
+                check=~Q(user=F('author')),
+                name='no_self_subscription'
             )
         ]
 
