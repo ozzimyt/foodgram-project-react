@@ -124,9 +124,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=[IsAuthenticated],
     )
     def favorite(self, request, pk):
-        if request.method == 'POST':
-            return self.add_action(FavoriteRecipeSerializer, request, pk)
-        return self.delete_action(FavoriteRecipes, request, pk)
+        return self.add_action(FavoriteRecipeSerializer, request, pk)
 
     @favorite.mapping.delete
     def delete_favorite(self, request, pk):
@@ -143,9 +141,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=[IsAuthenticated],
     )
     def shopping_cart(self, request, pk):
-        if request.method == 'POST':
-            return self.add_action(ShoppingCartSerializer, request, pk)
-        return self.delete_action(ShoppingCart, request, pk)
+        return self.add_action(ShoppingCartSerializer, request, pk)
 
     @shopping_cart.mapping.delete
     def delete_shopping_cart(self, request, pk):
