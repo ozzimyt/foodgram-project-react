@@ -13,12 +13,11 @@ SECRET_KEY = os.getenv(
     default='django-insecure-_+eeg%gte843uwx9a(u+)n1yn8wczstwab&809sk8+ha+p#3%#'
 )
 
-DEBUG = True
-# TODO DEBUG = os.getenv('DEBUG', False)
-DEBUG_SQLITE = os.getenv('DEBUG_SQLITE', True)
+DEBUG = os.getenv('DEBUG', False)
+DEBUG_SQLITE = os.getenv('DEBUG_SQLITE', False)
 
-ALLOWED_HOSTS = ['*']
-# TODO ALLOWED_HOSTS = str(os.getenv('ALLOWED_HOSTS')).split()
+ALLOWED_HOSTS = str(os.getenv('ALLOWED_HOSTS')).split()
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',

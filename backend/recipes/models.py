@@ -1,9 +1,8 @@
 from colorfield.fields import ColorField
-from django.core.validators import (MaxValueValidator, MinValueValidator,
-                                    RegexValidator)
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
-from foodgram.consts import (INGREDIENT_MAX_COUNT, MIN_NUM,
+from foodgram.consts import (INGREDIENT_MAX_AMOUNT, MIN_NUM,
                              RECIPES_MAX_LENGTH, TWENTY_FOUR_HOURS)
 from users.models import User
 
@@ -49,8 +48,6 @@ class Tag(models.Model):
         max_length=7,
         unique=True,
         null=True,
-        # Валидатор удалить ?
-        validators=[RegexValidator(r'^#[A-Fa-f0-9]{6}$')]
     )
     slug = models.SlugField(
         verbose_name='Уникальный URL тега',
@@ -143,10 +140,10 @@ class IngredientInRecipes(models.Model):
     amount = models.PositiveSmallIntegerField(
         verbose_name='Количество ингредиентов',
         validators=[
-            MinValueValidator(MIN_NUM, message='Не менее 1 ингридиента'),
+            MinValueValidator(MIN_NUM, message='Не менее 1 грамма'),
             MaxValueValidator(
-                INGREDIENT_MAX_COUNT,
-                message='Не более 50 ингридиентов'
+                INGREDIENT_MAX_AMOUNT,
+                message='Не более 50 килограмм'
             ),
         ]
     )

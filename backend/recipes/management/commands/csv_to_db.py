@@ -3,9 +3,9 @@ from csv import DictReader
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
+
 from recipes.models import Ingredient, Tag
 
-# TODO пока не придумал как брать из 2 фалов без 2 циклов :(
 
 FILE_DIR = path.join(settings.BASE_DIR, 'data')
 
@@ -21,8 +21,7 @@ class Command(BaseCommand):
                 'r',
                 encoding='utf-8'
             ) as file:
-                for row in DictReader(file):
-                    name, measurement_unit = row
+                for name, measurement_unit in DictReader(file):
                     Ingredient.objects.get_or_create(
                         name=name,
                         measurement_unit=measurement_unit
@@ -43,8 +42,7 @@ class Command(BaseCommand):
                 'r',
                 encoding='utf-8'
             ) as file:
-                for row in DictReader(file):
-                    name, color, slug = row
+                for name, color, slug in DictReader(file):
                     Tag.objects.get_or_create(
                         name=name,
                         color=color,

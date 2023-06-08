@@ -3,6 +3,7 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueTogetherValidator
+
 from recipes.models import (FavoriteRecipes, Ingredient,
                             IngredientInRecipes, Recipe,
                             ShoppingCart, Tag)
@@ -100,10 +101,10 @@ class CreateIngredientInRecipeSerializer(serializers.ModelSerializer):
         fields = ('id', 'amount',)
 
     def validate_amount_ingredients(self, value):
-        if not value:
-            raise ValidationError('Нужно добавить ингридиент.')
-        if all(_['amount'] <= 0 for _ in value):
-            raise ValidationError('Количество должно быть больше 0')
+        if int(value) < 1:
+            raise ValidationError(
+                'Количество должно быть больше 0'
+            )
         return value
 
 

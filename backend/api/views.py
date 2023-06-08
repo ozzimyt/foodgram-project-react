@@ -2,7 +2,7 @@ from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from djoser.views import UserViewSet as UsersViewSet
+from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
@@ -21,7 +21,7 @@ from recipes.models import (FavoriteRecipes, Ingredient,
 from users.models import Follow, User
 
 
-class UserViewSet(UsersViewSet):
+class UserViewSet(DjoserUserViewSet):
     """Вьюсет для пользователей."""
 
     queryset = User.objects.all()
@@ -35,15 +35,16 @@ class UserViewSet(UsersViewSet):
     )
     def subscribe(self, request, id):
         user = request.user
-        author = get_object_or_404(User, pk=id)
+        author = get_object_or_404(User, id=id)
         serializer = FollowerSerializer(
             author, data=request.data, context={'request': request}
         )
         serializer.is_valid(raise_exception=True)
+        serializer.save(author=author, user=user)
         Follow.objects.create(user=user, author=author)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @subscribe.mapping.delete
+    @ subscribe.mapping.delete
     def unsubscribe(self, request, id):
         get_object_or_404(
             Follow,
@@ -52,9 +53,9 @@ class UserViewSet(UsersViewSet):
         ).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=False,
-            methods=['get'],
-            permission_classes=[IsAuthenticated])
+    @ action(detail=False,
+             methods=['get'],
+             permission_classes=[IsAuthenticated])
     def subscriptions(self, request):
         user = request.user
         queryset = User.objects.filter(following__user=user)
@@ -101,7 +102,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeReadSerializer
         return RecipeWriteSerializer
 
-    @staticmethod
+    @ staticmethod
     def add_action(serializer, request, pk):
         context = {'request': request}
         recipe = get_object_or_404(Recipe, id=pk)
@@ -111,14 +112,15 @@ class RecipeViewSet(viewsets.ModelViewSet):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @staticmethod
+    @ staticmethod
     def delete_action(model, request, pk):
         get_object_or_404(
-            model, user=request.user, recipe=get_object_or_404(Recipe, id=pk)
+            model, user=request.user, recipe=get_object_or_404(
+                Recipe, id=pk)
         ).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(
+    @ action(
         detail=True,
         methods=['post'],
         permission_classes=[IsAuthenticated],
@@ -126,7 +128,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def favorite(self, request, pk):
         return self.add_action(FavoriteRecipeSerializer, request, pk)
 
-    @favorite.mapping.delete
+    @ favorite.mapping.delete
     def delete_favorite(self, request, pk):
         get_object_or_404(
             FavoriteRecipes,
