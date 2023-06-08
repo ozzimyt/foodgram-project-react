@@ -87,11 +87,10 @@ jobs:
             sudo echo MODE=${{ secrets.DEBUG_SQLITE }} >> .env
 
             cd infra/
-            sudo docker compose stop
-            sudo docker compose rm backend
-            sudo docker compose rm frontend
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram_backend:latest
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram_frontend:latest
+            sudo docker compose stop
+            sudo docker compose rm backend
             sudo docker compose up -d --build
 
   send_message:
