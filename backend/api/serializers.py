@@ -7,7 +7,7 @@ from rest_framework.validators import UniqueTogetherValidator
 from recipes.models import (FavoriteRecipes, Ingredient,
                             IngredientInRecipes, Recipe,
                             ShoppingCart, Tag)
-from users.models import User
+from users.models import User, Follow
 
 
 class UserSerializer(UserSerializer):
@@ -54,6 +54,21 @@ class FollowerSerializer(UserSerializer):
 
     def get_recipes_count(self, obj):
         return obj.recipes.count()
+
+
+class UserSubscribeSerializer(serializers.ModelSerializer):
+    """Сериализатор для подписки."""
+
+    class Meta:
+        model = Follow
+        fields = ('user', 'author',)
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Follow.objects.all(),
+                fields=('user', 'author'),
+                message='Вы уже подписаны'
+            )
+        ]
 
 
 class TagSerializer(serializers.ModelSerializer):

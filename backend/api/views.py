@@ -14,7 +14,8 @@ from .permissions import AuthorOrAdminOrReadOnly
 from .serializers import (FavoriteRecipeSerializer, FollowerSerializer,
                           IngredientSerializer, RecipeReadSerializer,
                           RecipeWriteSerializer, ShoppingCartSerializer,
-                          TagSerializer, UserSerializer)
+                          TagSerializer, UserSerializer,
+                          UserSubscribeSerializer)
 from recipes.models import (FavoriteRecipes, Ingredient,
                             IngredientInRecipes, Recipe,
                             ShoppingCart, Tag)
@@ -34,14 +35,13 @@ class UserViewSet(DjoserUserViewSet):
         permission_classes=[IsAuthenticated],
     )
     def subscribe(self, request, id):
-        user = request.user
         author = get_object_or_404(User, id=id)
-        serializer = FollowerSerializer(
-            author, data=request.data, context={'request': request}
+        serializer = UserSubscribeSerializer(
+            data={'user': request.user.id, 'author': author.id},
+            context={'request': request}
         )
         serializer.is_valid(raise_exception=True)
-        serializer.save(author=author, user=user)
-        Follow.objects.create(user=user, author=author)
+        serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @ subscribe.mapping.delete
