@@ -114,9 +114,40 @@ docker compose exec backend python manage.py createsuperuser
 <details>
 <summary><h2>Деплой на удаленном сервере</h2></summary>
 
-раздел в разработке
+### *Подготовка сервера*
 
-``` sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose```
+Аутентифицируйтесь на удаленном сервере:
+```ssh <username>@<hostname>```
+
+Обновите пакеты:
+```
+sudo apt update
+sudo apt upgrade -y
+```
+
+Установите Docker:
+
+```sudo apt install docker.io```
+
+Установите Docker-compose:
+```
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+```
+
+
+Скопируйте файлы конфигурации:
+```
+scp docker-compose.yml <username>@<host>:/home/<username>/docker-compose.yml
+scp nginx.conf <username>@<host>:/home/<username>/nginx.conf
+```
+
+Создайте суперпользователя:
+```
+sudo docker-compose exec -T backend python manage.py createsuperuser
+```
+
+### *...profit !*
 
 </details>
 
