@@ -9,7 +9,7 @@ services:
       - .env
 
   backend:
-    image: ozimyt/foodgram-backend:latest
+    image: ozimyt/foodgram_backend:latest
     restart: always
     volumes:
       - static_value:/app/static/
@@ -22,7 +22,7 @@ services:
     container_name: backend
 
   frontend:
-    image: ozimyt/foodgram-frontend:latest
+    image: ozimyt/foodgram_frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
