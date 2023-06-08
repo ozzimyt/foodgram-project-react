@@ -86,7 +86,6 @@ jobs:
             sudo echo ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }} >> .env
             sudo echo MODE=${{ secrets.DEBUG_SQLITE }} >> .env
 
-            cd infra/
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram_backend:latest
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram_frontend:latest
             sudo docker compose stop
