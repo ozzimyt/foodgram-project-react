@@ -37,15 +37,11 @@ class UserViewSet(DjoserUserViewSet):
         user = request.user
         author = get_object_or_404(User, id=id)
         serializer = FollowerSerializer(
-            # data={'user': user.pk, 'author': author.pk},
-            # context={'request': request}
-            # data={'user': request.user.id, 'author': author.id},
-            # context={'request': request}
             author, data=request.data, context={'request': request}
         )
         serializer.is_valid(raise_exception=True)
         serializer.save(author=author, user=user)
-        # Follow.objects.create(user=user, author=author)
+        Follow.objects.create(user=user, author=author)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @ subscribe.mapping.delete
